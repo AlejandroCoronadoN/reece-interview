@@ -74,7 +74,7 @@ tapware_and_accesories_dict = {
         'Tapware Cartridges' : "https://www.reece.com.au/search/tapware-accessories-c2518/tapware-spare-parts-c2620/tapware-cartridges-c2614",
     },
 
-    'Clearance Tapware & Accessories' : {
-    'Clearance Tapware & Accessories' : "https://www.reece.com.au/search/tapware-accessories-c2518?industryFacets=clearance",
-    }
+    #'Clearance Tapware & Accessories' : {
+    #'Clearance Tapware & Accessories' : "https://www.reece.com.au/search/tapware-accessories-c2518/?sortBy=POPULARITY&sortDirection=DESCENDING&pageNumber=2&pageSize=15&industryFacets=clearance",
+    #}
 }
