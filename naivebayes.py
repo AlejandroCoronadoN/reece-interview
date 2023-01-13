@@ -2,47 +2,35 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import seaborn as sns 
 from  sklearn.datasets import fetch_20newsgroups
+import pandas as pd 
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import confusion_matrix
 
-data = fetch_20newsgroups()
-data.target_names
+data = pd.read_csv("checkpoint.csv")
 
-categories  = ['alt.atheism',
- 'comp.graphics',
- 'comp.os.ms-windows.misc',
- 'comp.sys.ibm.pc.hardware',
- 'comp.sys.mac.hardware',
- 'comp.windows.x',
- 'misc.forsale',
- 'rec.autos',
- 'rec.motorcycles',
- 'rec.sport.baseball',
- 'rec.sport.hockey',
- 'sci.crypt',
- 'sci.electronics',
- 'sci.med',
- 'sci.space',
- 'soc.religion.christian',
- 'talk.politics.guns',
- 'talk.politics.mideast',
- 'talk.politics.misc',
- 'talk.religion.misc']
 
-train  = fetch_20newsgroups(subset ="train", categories =categories)
-test = fetch_20newsgroups(subset = "test", categories=categories)
+train = pd.DataFrame()
+test = pd.DataFrame()
+
+for subcat in data.Subcategory.unique():
+    data_sub = data[data.Subcategory == subcat]
+    sindex = int(np.round(len(data_sub)*.8))
+    if len(test)==0:
+        train  = data_sub[:sindex]
+        test = data_sub[sindex:] 
+    else:
+        train  = train.append(data_sub[:sindex])
+        test = test.append(data_sub[sindex:] )
 
 #Convert column to list
 model = make_pipeline(TfidfVectorizer(), MultinomialNB())
-model.fit(train.data, train.target)
-labels = model.predict(test.data)
+model.fit(train.name.values, train.Subcategory.values)
+labels = model.predict(test.name.values)
 
 
-mat = confusion_matrix(test.taget, labels)
+mat = confusion_matrix(test.Subcategory.values, labels)
 
-sns.heatmap(mat.T, square=True, annot=True, fmt='d', cbar=False,
-            xticklabels =train.target_names,
-            yticklabels = train.target_names)
+sns.heatmap(mat.T, square=True, annot=True, fmt='d', cbar=False)
